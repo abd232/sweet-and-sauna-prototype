@@ -14,7 +14,7 @@
   font-family: "Cairo", sans-serif;
 }
 .main-header {
-  background: linear-gradient(90deg, #0f0f0f, #171717);
+  background: linear-gradient(135deg, #111 0%, #1a1a1a 45%, #2b2b2b 100%);
   color: var(--text-white);
   padding: 16px 40px;
   display: flex;
