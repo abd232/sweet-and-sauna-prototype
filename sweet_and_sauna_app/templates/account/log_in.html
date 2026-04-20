@@ -1,0 +1,171 @@
+<!-- prettier-ignore-start -->
+{% extends "base.html" %} 
+{% block title %} 
+Login 
+{%endblock%} {% block extra_css %} 
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/log_in.css' %}" />
+{% endblock %} 
+{% block content %}
+<!-- prettier-ignore-end -->
+<main>
+  <div class="login-container">
+    <div class="logo-section">
+      {% load static %}
+      <img src="{% static 'images/logo_for_login.jpg' %}" alt="Logo" />
+    </div>
+
+    <div class="welcome-text">
+      <p>مرحباً بك مرة أخرى في سويت ساونا.</p>
+      <p>سجل الدخول لمتابعة رحلتك معنا.</p>
+    </div>
+
+    <div class="toggle-container">
+      <button class="toggle-btn login-btn active" onclick="loginBtnClicked()">
+        تسجيل الدخول
+      </button>
+      <button class="toggle-btn signup-btn" onclick="signupBtnClicked()">
+        إنشاء حساب
+      </button>
+    </div>
+    <div class="forms-container">
+      <form
+        id="loginForm"
+        class="login-form"
+        action="{% url 'log_in' %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <div class="input-group">
+          <label>Email Address</label>
+          <div class="input-with-icon">
+            <i class="icon-email"></i>
+            <input
+              name="email"
+              type="text"
+              placeholder="اسم المستخدم أو البريد الإلكتروني"
+              dir="rtl"
+            />
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Password</label>
+          <div class="input-with-icon">
+            <i class="icon-lock"></i>
+            <input
+              name="password"
+              type="password"
+              placeholder="كلمة المرور"
+              dir="rtl"
+            />
+          </div>
+        </div>
+        {% for key,value in errors.items %}
+          <p class="text-danger">{{ value }}</p>
+        {% endfor %}
+        <a href="#" class="forgot-password">هل نسيت كلمة المرور؟</a>
+
+        <button type="submit" class="submit-btn">
+          سجل الدخول لمتابعة رحلتك معنا
+        </button>
+      </form>
+      <form
+        class="login-form signup-container signup-form"
+        action="{% url 'register' %}"
+        method="post"
+      >
+        {% csrf_token %}
+        <div>
+          <div class="input-group">
+            <label>Email Address</label>
+            <div class="input-with-icon">
+              <i class="icon-email"></i>
+              <input
+                name="email"
+                type="text"
+                placeholder="البريد الإلكتروني"
+                dir="rtl"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label>First Name</label>
+            <div class="input-with-icon">
+              <i class="icon-user"></i>
+              <input
+                name="first_name"
+                type="text"
+                placeholder="الاسم الأول"
+                dir="rtl"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Last Name</label>
+            <div class="input-with-icon">
+              <i class="icon-user"></i>
+              <input
+                name="last_name"
+                type="text"
+                placeholder="الاسم الأخير"
+                dir="rtl"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <div class="input-with-icon">
+              <i class="icon-lock"></i>
+              <input
+                name="password"
+                type="password"
+                placeholder="كلمة المرور"
+                dir="rtl"
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Confirm Password</label>
+            <div class="input-with-icon">
+              <i class="icon-lock"></i>
+              <input
+                name="confirm_password"
+                type="password"
+                placeholder="تأكيد كلمة المرور"
+                dir="rtl"
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="input-group">
+            <label>Address</label>
+            <div class="input-with-icon">
+              <i class="icon-location"></i>
+              <input
+                name="address"
+                type="text"
+                placeholder="العنوان"
+                dir="rtl"
+              />
+            </div>
+            <label>Phone Number</label>
+            <div class="input-with-icon">
+              <i class="icon-phone"></i>
+              <input
+                name="phone_number"
+                type="text"
+                placeholder="رقم الهاتف"
+                dir="rtl"
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+{% load static %}
+<script src="{% static 'js/login.js' %}"></script>
+{% endblock %}

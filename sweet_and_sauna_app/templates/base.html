@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sweet Sauna Header</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+    {% block extra_css %} {% endblock %}
+  </head>
+  <body>
+    <div class="overlay" id="overlay"></div>
+
+    <header class="main-header">
+      <!-- Logo -->
+      <div class="logo-section">
+        <span class="logo-text">SWEET SAUNA</span>
+        <i class="fa-solid fa-droplet logo-icon"></i>
+      </div>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav">
+        <ul class="nav-menu">
+          <li><a id="main_page" href="{% url 'index' %}">الرئيسية</a></li>
+          <li><a id="store_page" href="{% url 'store' %}">المتجر</a></li>
+          <li><a id="accessories_page" href="{% url 'store' %}">العروض</a></li>
+          +
+          <li><a id="offers_page" href="{% url 'store' %}">أكثر عنا</a></li>
+          <li><a id="corsets_page" href="{% url 'store' %}">تواصل معنا</a></li>
+        </ul>
+      </nav>
+
+      <!-- Controls -->
+      <div class="left-controls">
+        <!-- Profile Dropdown -->
+        <div class="profile-dropdown" id="profileDropdown">
+          <button class="user-profile-box" id="profileToggle" type="button">
+            <div class="avatar">
+              <i class="fa-solid fa-user" style="font-size: 14px"></i>
+            </div>
+
+            <div class="user-info">
+              <span class="welcome-text">مرحبا</span>
+              {% if user.is_authenticated %}
+              <span class="user-name">{{ user.username }}</span>
+              {% else %}
+              <span class="user-name">Guest</span>
+              {% endif %}
+            </div>
+
+            <i class="fa-solid fa-chevron-down profile-arrow"></i>
+          </button>
+
+          <div class="profile-menu" id="profileMenu">
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="profile-menu-item">
+              <i class="fa-solid fa-user"></i>
+              <span>حسابي</span>
+            </a>
+
+            <form
+              method="post"
+              action="{% url 'log_out' %}"
+              class="dropdown-form"
+            >
+              {% csrf_token %}
+              <button type="submit" class="profile-menu-item logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>تسجيل الخروج</span>
+              </button>
+            </form>
+            {% else %}
+            <a href="{% url 'log_in' %}" class="profile-menu-item">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              <span>تسجيل الدخول</span>
+            </a>
+
+            <a href="{% url 'register' %}" class="profile-menu-item">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>إنشاء حساب</span>
+            </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Cart -->
+        <div class="action-icons">
+          <button class="icon-btn" type="button" aria-label="Cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="cart-badge">2</span>
+          </button>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open Menu"
+        >
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-logo">Sweet Sauna</span>
+        <button
+          class="close-menu"
+          id="closeMenu"
+          type="button"
+          aria-label="Close Menu"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <ul class="sidebar-links">
+        <li>
+          <a href="{% url 'index' %}"><i class="fas fa-home"></i> الرئيسية</a>
+        </li>
+        <li>
+          <a href="{% url 'store' %}"><i class="fas fa-store"></i> المتجر</a>
+        </li>
+        <li>
+          <a href="{% url 'store' %}"><i class="fas fa-percent"></i> العروض</a>
+        </li>
+        <li>
+          <a href="{% url 'store' %}"><i class="fas fa-shirt"></i> مشدات</a>
+        </li>
+        <li>
+          <a href="{% url 'store' %}"><i class="fas fa-gem"></i> اكسسوارات</a>
+        </li>
+
+        <hr class="sidebar-divider" />
+
+        {% if user.is_authenticated %}
+        <li>
+          <a href="{% url 'profile' %}">
+            <i class="fas fa-user-circle"></i> حسابي
+          </a>
+        </li>
+        <li>
+          <form
+            method="post"
+            action="{% url 'log_out' %}"
+            class="mobile-logout-form"
+          >
+            {% csrf_token %}
+            <button type="submit" class="mobile-logout-btn">
+              <i class="fas fa-right-from-bracket"></i> تسجيل الخروج
+            </button>
+          </form>
+        </li>
+        {% else %}
+        <li>
+          <a href="{% url 'log_in' %}">
+            <i class="fas fa-right-to-bracket"></i> تسجيل الدخول
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'register' %}">
+            <i class="fas fa-user-plus"></i> إنشاء حساب
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+    {% block content %} {% endblock %}
+    <footer class="main-footer">
+      <div class="footer-container">
+        <div class="footer-column about-us">
+          <div class="footer-logo">
+            {% load static %}
+            <img src="{% static 'images/logo.jpg' %}" alt="Logo" />
+            <span>SWEET SAUNA</span>
+          </div>
+          <p>
+            متجرك الأول لكل مستلزمات الساونا والرفاهية. نوفر أجود أنواع أجهزة
+            الساونا المنزلية والزيوت العطرية لنمنحك تجربة استرخاء لا تُنسى.
+          </p>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3>روابط سريعة</h3>
+          <ul>
+            <li><a href="#">من نحن</a></li>
+            <li><a href="#">الأسئلة الشائعة</a></li>
+            <li><a href="#">سياسة الإرجاع</a></li>
+            <li><a href="#">طرق الشحن</a></li>
+            <li><a href="#">اتصل بنا</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>الأقسام</h3>
+          <ul>
+            <li><a href="#">أجهزة الساونا</a></li>
+            <li><a href="#">زيوت عطرية</a></li>
+            <li><a href="#">إكسسوارات</a></li>
+            <li><a href="#">قطع غيار</a></li>
+            <li><a href="#">عروض خاصة</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column newsletter">
+          <h3>اشترك معنا</h3>
+          <p>سجل بريدك الإلكتروني ليصلك أحدث العروض والخصومات.</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="بريدك الإلكتروني" required />
+            <button type="submit">اشترك</button>
+          </form>
+          <div class="payment-methods">
+            <i class="fab fa-cc-visa"></i>
+            <i class="fab fa-cc-mastercard"></i>
+            <i class="fab fa-cc-apple-pay"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>جميع الحقوق محفوظة &copy; 2026 Sweet Sauna. تم التطوير بكل حب.</p>
+      </div>
+    </footer>
+    <script>
+      const menuToggle = document.getElementById("menuToggle");
+      const closeMenu = document.getElementById("closeMenu");
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+
+      const profileToggle = document.getElementById("profileToggle");
+      const profileDropdown = document.getElementById("profileDropdown");
+
+      function openSidebar() {
+        sidebar.classList.add("active");
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeSidebarFunc() {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      if (menuToggle) {
+        menuToggle.addEventListener("click", openSidebar);
+      }
+
+      if (closeMenu) {
+        closeMenu.addEventListener("click", closeSidebarFunc);
+      }
+
+      if (overlay) {
+        overlay.addEventListener("click", closeSidebarFunc);
+      }
+
+      if (profileToggle && profileDropdown) {
+        profileToggle.addEventListener("click", function (e) {
+          e.stopPropagation();
+          profileDropdown.classList.toggle("active");
+        });
+
+        document.addEventListener("click", function (e) {
+          if (!profileDropdown.contains(e.target)) {
+            profileDropdown.classList.remove("active");
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

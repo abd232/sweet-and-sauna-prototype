@@ -1,0 +1,236 @@
+<!-- prettier-ignore-start -->
+{% extends "base.html" %} 
+{% block title %} 
+Store 
+{%endblock%} 
+{% block extra_css %} 
+{% load static %}
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="{% static 'css/store.css' %}" />
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  rel="stylesheet"
+/>
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+  body {
+    font-family: "Inter", sans-serif;
+    background-color: #fff;
+  }
+</style>
+{% endblock %} 
+{% block content %}
+<!-- prettier-ignore-end -->
+<div class="text-gray-800">
+  <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row p-6 gap-8">
+    <aside class="w-full md:w-64 flex-shrink-0">
+      <h2 class="text-xl font-bold mb-6">Filter Products</h2>
+      <div class="mb-8">
+        <label
+          for="search"
+          class="block mb-2.5 text-sm font-medium text-heading sr-only"
+          >Search</label
+        >
+        <div class="relative">
+          <div
+            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
+          >
+            <svg
+              class="w-4 h-4 text-body"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="2"
+                d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          </div>
+          <input
+            type="search"
+            id="search"
+            class="block w-full p-3 ps-9 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body"
+            placeholder="Search"
+            required
+          />
+          <button
+            type="button"
+            class="absolute end-1.5 bottom-1.5 text-white bg-brand hover:bg-brand-strong box-border border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded text-xs px-3 py-1.5 focus:outline-none"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      <div class="mb-8 border-t pt-6">
+        <div class="flex justify-between items-center mb-4 cursor-pointer">
+          <span class="font-semibold">Category</span>
+          <i class="fa-solid fa-chevron-up text-sm"></i>
+        </div>
+        <div class="space-y-3">
+          <select class="w-full border p-2 rounded outline-none">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-8 border-t pt-6">
+        <div class="price-header">
+          <span>^</span>
+          <span style="font-weight: bold">Price</span>
+        </div>
+
+        <div class="range-slider">
+          <div class="slider-track"></div>
+          <div class="slider-progress" id="progress"></div>
+          <input
+            type="range"
+            id="min-range"
+            min="0"
+            max="1000"
+            value="100"
+            step="10"
+          />
+          <input
+            type="range"
+            id="max-range"
+            min="0"
+            max="1000"
+            value="500"
+            step="10"
+          />
+        </div>
+
+        <div class="price-input-container">
+          <div class="price-box">
+            <span class="label">From</span>
+            <span class="value" id="from-val">$100</span>
+          </div>
+          <div class="price-box">
+            <span class="label">To</span>
+            <span class="value" id="to-val">$500</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-8 border-t pt-6">
+        <div class="flex justify-between items-center mb-4 cursor-pointer">
+          <span class="font-semibold">Tags</span>
+          <i class="fa-solid fa-chevron-up text-sm"></i>
+        </div>
+        <div class="text-tags">
+          {% for tag in tags %}
+          <button class="tag-button" onclick="toggleTag(this)">
+            {{ tag.arabic_name }}
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+    </aside>
+
+    <main class="flex-1">
+      <div
+        class="flex flex-col lg:flex-row lg:items-center justify-between mb-6 gap-4"
+      >
+        <div>
+          <div id="spans_container" class="flex flex-wrap gap-2 mt-3"></div>
+        </div>
+        <div class="flex items-center gap-2 text-sm">
+          <span class="text-gray-400">Sort by</span>
+          <select class="font-bold bg-transparent outline-none">
+            <option>Popularity</option>
+            <option>Newest</option>
+            <option>Price: Low to High</option>
+          </select>
+        </div>
+      </div>
+
+      <div
+        class="grid pr-20 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-10"
+      >
+        {% for product in products %}
+
+        <div class="group cursor-pointer">
+          <div class="product-card">
+            <div class="product-image">
+              <img
+                src="{{ product.image.url }}"
+                loading="lazy"
+                alt="{{ product.arabic_name }}"
+              />
+            </div>
+            <div class="product-info">
+              <h3 class="product-title">{{ product.arabic_name }}</h3>
+              <p class="product-price">{{ product.price }} درهم</p>
+              <button class="add-btn">أضف إلى السلة</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="flex justify-center items-center gap-2 mt-16 border-t pt-8">
+        <button
+          class="px-4 py-2 border rounded-full text-xs font-bold flex items-center gap-2 text-gray-400"
+        >
+          <i class="fa-solid fa-arrow-left"></i> PREVIOUS
+        </button>
+        <div class="flex gap-1">
+          <button class="w-8 h-8 rounded-full bg-gray-100 text-xs font-bold">
+            1
+          </button>
+          <button class="w-8 h-8 rounded-full text-xs font-bold text-gray-400">
+            2
+          </button>
+          <button class="w-8 h-8 rounded-full text-xs font-bold text-gray-400">
+            3
+          </button>
+          <button class="w-8 h-8 rounded-full text-xs font-bold text-gray-400">
+            ...
+          </button>
+          <button class="w-8 h-8 rounded-full text-xs font-bold text-gray-400">
+            15
+          </button>
+        </div>
+        <button
+          class="px-4 py-2 border rounded-full text-xs font-bold flex items-center gap-2"
+        >
+          NEXT <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </main>
+  </div>
+  <script>
+    // JavaScript for interactivity
+
+    // Toggle selected state for color swatches
+    function toggleColor(element) {
+      // Deselect any currently selected color
+      const currentSelected = document.querySelector(".color-circle.selected");
+      if (currentSelected) {
+        currentSelected.classList.remove("selected");
+      }
+      // Select the clicked color
+      element.classList.add("selected");
+    }
+
+    // Toggle selected state for text tags
+    function toggleTag(element) {
+      document.getElementById("spans_container").innerHTML += `
+        <span
+              class="px-3 py-1 border text-[14px] font-bold uppercase rounded-full flex items-center gap-2"
+              >${element.textContent} <i class="fa-solid fa-xmark cursor-pointer"></i
+            ></span>`;
+      element.classList.toggle("selected");
+    }
+  </script>
+  {% endblock %}
+</div>

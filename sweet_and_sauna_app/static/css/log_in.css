@@ -1,0 +1,160 @@
+main {
+  background-color: var(--sidebar-bg); /* الخلفية السوداء العميقة */
+  color: var(--primary-yellow); /* اللون الأصفر للنصوص الأساسية */
+  font-family: "Cairo", sans-serif; /* خط عربي متناسق */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* تنسيق حاوية الفورم */
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  padding: 20px;
+}
+
+.logo-section img {
+  margin: auto;
+  height: 200px;
+  width: 200px;
+}
+
+/* تنسيق النصوص الترحيبية */
+.welcome-text {
+  color: var(--primary-yellow);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.forms-container {
+  overflow: hidden;
+  display: flex;
+  max-width: 390px;
+  gap: 30px;
+  padding: 30px;
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.forms-container > form {
+  flex: 1;
+  width: 100% !important;
+  min-width: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.signup-container {
+  position: relative;
+  overflow: hidden;
+  height: 470px;
+  transition: height 0.5s ease-in-out;
+}
+
+/* كبسولة الأزرار (إنشاء حساب / تسجيل دخول) */
+.toggle-container {
+  display: flex;
+  background-color: #2a2a2a; /* لون خلفية الأزرار */
+  border: 1px solid var(--primary-yellow); /* الإطار الأصفر */
+  border-radius: 50px;
+  margin-bottom: 25px;
+  overflow: hidden;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--primary-yellow);
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+/* الزر المختار (الأصفر بالكامل) */
+.toggle-btn.active {
+  background-color: var(--primary-yellow);
+  color: #121212; /* نص أسود للوضوح */
+}
+
+/* تنسيق حقول الإدخال */
+.input-group {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.input-with-icon {
+  position: relative;
+  border: 1px solid var(--primary-yellow);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 12px 40px 12px 10px; /* مسافة للأيقونة */
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* زر الإرسال العريض */
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background-color: var(--primary-yellow);
+  color: #121212;
+  border: none;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s;
+}
+
+.submit-btn:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
+.forgot-password {
+  display: block;
+  color: var(--primary-yellow);
+  text-decoration: none;
+  font-size: 0.85rem;
+  margin: 10px 0 20px 0;
+  text-align: center;
+}
+
+.text-danger {
+  color: red;
+}
+
+/* Footer التذييل */
+.footer {
+  margin-top: 50px;
+  text-align: center;
+  color: #fff;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+  font-size: 0.9rem;
+}

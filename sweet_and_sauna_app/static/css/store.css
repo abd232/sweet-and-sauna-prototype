@@ -1,0 +1,333 @@
+:root {
+  --bg-white: #ffffff;
+  --border-color: #e5e5e5;
+  --text-main: #333;
+  --text-muted: #888;
+}
+
+.shop-container {
+  display: flex;
+  padding: 20px;
+  gap: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: "Inter", sans-serif;
+}
+
+/* Sidebar Styles */
+.sidebar-1 {
+  width: 250px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.filter-group {
+  margin-bottom: 25px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 15px;
+}
+
+.filter-list {
+  list-style: none;
+  padding: 0;
+}
+
+.filter-list li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.filter-list span {
+  color: var(--text-muted);
+}
+
+.color-palette {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.color-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+/* Product Area Styles */
+.product-area {
+  flex-grow: 1;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.filter-tag {
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+.product-card {
+  background: white;
+  transition: 0.3s;
+}
+
+.img-wrapper img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.card-details {
+  padding: 10px 0;
+  text-align: left;
+}
+
+.color-options {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.p-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 5px 0;
+}
+
+.p-price {
+  font-weight: bold;
+  color: var(--text-main);
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 200px;
+  min-width: 240px;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* صورة المنتج */
+.product-image {
+  margin-bottom: 15px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* نصوص الكارت */
+.product-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+  min-height: 44px; /* لتوحيد الارتفاع لو كان الاسم طويلاً */
+}
+
+.product-price {
+  color: #b59410; /* لون ذهبي/أصفر غامق للسعر */
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+/* زر أضف للسلة */
+.add-btn {
+  background-color: #f2e307; /* اللون الأصفر الخاص بالهوية */
+  color: #000;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.add-btn:hover {
+  background-color: #000;
+  color: #f2e307;
+}
+
+.text-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-button {
+  background-color: white;
+  color: #333;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: #888 solid 1px;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.tag-button:hover {
+  background-color: #fff9c4;
+}
+
+/* Selected State for Tags */
+.tag-button.selected {
+  background-color: var(--primary-yellow); /* Light Yellow */
+  color: #333;
+}
+
+.price-filter {
+  width: 300px;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.price-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Container for the dual sliders */
+.range-slider {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  margin-bottom: 40px;
+}
+
+/* The actual grey track */
+.slider-track {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: var(--light-grey);
+  border-radius: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+/* The black bar that moves between thumbs */
+.slider-progress {
+  position: absolute;
+  height: 4px;
+  background: var(--primary-black);
+  border-radius: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+/* Hidden standard inputs */
+input[type="range"] {
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  pointer-events: none; /* Allows clicks to pass through to the other slider */
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  z-index: 3;
+}
+
+/* Styling the thumb (the dots) */
+input[type="range"]::-webkit-slider-thumb {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: var(--primary-black);
+  pointer-events: auto; /* Makes only the thumb clickable */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  cursor: pointer;
+}
+
+/* Price Boxes Styling */
+.price-input-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.price-box {
+  flex: 1;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 10px;
+  text-align: center;
+}
+
+.label {
+  font-size: 12px;
+  color: var(--text-grey);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.value {
+  font-weight: bold;
+  font-size: 14px;
+}

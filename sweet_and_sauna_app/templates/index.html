@@ -1,0 +1,107 @@
+<!-- prettier-ignore-start -->
+{% extends "base.html" %}
+{% block title %}
+Login 
+{%endblock%} 
+{% block extra_css %} 
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}" />
+{% endblock %} 
+{% block content %}
+<!-- prettier-ignore-end -->
+<main>
+  {% for menu in special_menus %}
+  <div class="cards-container">
+    <div class="cards-container-header">
+      <div>
+        <h2>{{ menu.arabic_name }}</h2>
+        <button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            aria-hidden="true"
+            role="presentation"
+            focusable="false"
+            style="
+              display: block;
+              fill: none;
+              height: 12px;
+              width: 12px;
+              stroke: currentcolor;
+              stroke-width: 4;
+              overflow: visible;
+            "
+          >
+            <g fill="none">
+              <path d="M28 16H2M17 4l11.3 11.3a1 1 0 0 1 0 1.4L17 28"></path>
+            </g>
+          </svg>
+        </button>
+      </div>
+      <div id="arrow_buttons_container">
+        <button onclick="leftArrowClicked(this)" disabled="">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            aria-hidden="true"
+            role="presentation"
+            focusable="false"
+            style="
+              display: block;
+              fill: none;
+              height: 12px;
+              width: 12px;
+              stroke: currentcolor;
+              stroke-width: 4;
+              overflow: visible;
+            "
+          >
+            <path fill="none" d="m12 4 11.3 11.3a1 1 0 0 1 0 1.4L12 28"></path>
+          </svg>
+        </button>
+        <button onclick="rightArrowClicked(this)">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            aria-hidden="true"
+            role="presentation"
+            focusable="false"
+            style="
+              display: block;
+              fill: none;
+              height: 12px;
+              width: 12px;
+              stroke: currentcolor;
+              stroke-width: 4;
+              overflow: visible;
+            "
+          >
+            <path fill="none" d="M20 28 8.7 16.7a1 1 0 0 1 0-1.4L20 4"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="cards-container-body">
+      {% for product in menu.products.all %}
+      <div class="product-card">
+        <div class="product-image">
+          <img
+            src="{{ product.product.image.url }}"
+            loading="lazy"
+            alt="{{ product.product.arabic_name }}"
+          />
+        </div>
+        <div class="product-info">
+          <h3 class="product-title">{{ product.product.arabic_name }}</h3>
+          <p class="product-price">{{ product.product.price }} درهم</p>
+          <button class="add-btn">أضف إلى السلة</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</main>
+{% load static %}
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock %}
