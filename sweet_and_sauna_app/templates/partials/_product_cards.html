@@ -1,0 +1,92 @@
+{% for product in products %}
+<div class="product-card">
+  <!-- 1. The main image area, with a separate container to fix image cropping issues -->
+  <div class="product-image-container">
+    {% if product.discount_percentage and product.discount_percentage > 0 %}
+    <div class="discount-badge">-{{ product.discount_percentage }}%</div>
+    {% endif %}
+
+    <!-- This overlay shows on hover (Desktop) -->
+    <div class="hover-overlay">
+      <i class="fa-solid fa-eye overlay-icon"></i>
+      <span class="overlay-text">نظرة سريعة</span>
+    </div>
+
+    <img
+      src="{{ product.image.url }}"
+      loading="lazy"
+      alt="{{ product.arabic_name }}"
+      class="seamless-img w-100"
+    />
+  </div>
+
+  <!-- 2. The info area below the image -->
+  <div class="product-info-wrap">
+    <h3 class="product-title">{{ product.arabic_name }}</h3>
+
+    {% if product.discount_percentage and product.discount_percentage > 0 %}
+    <div class="price-container discounted">
+      <span class="price new-price">{{ product.discounted_price }} درهم</span>
+      <span class="price old-price">{{ product.price }} درهم</span>
+    </div>
+    {% else %}
+    <div class="price-container">
+      <span class="price new-price">{{ product.price }} درهم</span>
+    </div>
+    {% endif %}
+
+    <!-- 3. Integrated Quantity & Add to Cart Controls -->
+    <div class="controls-row">
+      <div class="qty-integrated-box">
+        <button type="button" class="integrated-btn minus">−</button>
+        <input type="number" class="qty-input integrated-input" value="1" min="1" />
+        <button type="button" class="integrated-btn plus">+</button>
+      </div>
+
+      <button
+        class="add-to-cart-integrated-btn add-to-cart-btn"
+        data-product-id="{{ product.id }}"
+      >
+        أضف إلى السلة
+      </button>
+    </div>
+  </div>
+</div>
+
+{% empty %}
+<div class="no-products-found">لا توجد منتجات مطابقة لخياراتك</div>
+{% endfor %}
+
+{% if products.paginator.num_pages > 1 %}
+<div class="pagination-wrapper-grid">
+  {% if products.has_previous %}
+  <button
+    class="page-btn ajax-page-btn"
+    data-page="{{ products.previous_page_number }}"
+  >
+    السابق
+  </button>
+  {% endif %}
+
+  <div class="page-numbers-group">
+    {% for num in products.paginator.page_range %}
+      {% if products.number == num %}
+        <button class="page-number active" disabled>{{ num }}</button>
+      {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+        <button class="page-number ajax-page-btn" data-page="{{ num }}">
+          {{ num }}
+        </button>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if products.has_next %}
+  <button
+    class="page-btn ajax-page-btn"
+    data-page="{{ products.next_page_number }}"
+  >
+    التالي
+  </button>
+  {% endif %}
+</div>
+{% endif %}
