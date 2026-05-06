@@ -58,3 +58,35 @@ function changeTab(tabId, contentId) {
 }
 
 document.getElementById("main_page").classList.add("active");
+
+let currentSlide = 0;
+let currentImage = 0;
+
+const slides = document.querySelectorAll(".hero-slide");
+const totalSlides = slides.length;
+
+const heroSection = document.querySelector("main section");
+
+const heroImages = [
+  "/static/images/heroimg1.png",
+  "/static/images/heroimg2.png",
+  "/static/images/heroimg3.png",
+];
+
+function showSlide(index) {
+  slides.forEach((slide) => slide.classList.remove("active"));
+  currentSlide = (index + totalSlides) % totalSlides;
+  slides[currentSlide].classList.add("active");
+
+  heroSection.style.backgroundImage = `url('${heroImages[currentSlide]}')`;
+}
+
+function changeSlide(step) {
+  showSlide(currentSlide + step);
+}
+
+showSlide(0);
+
+setInterval(() => {
+  changeSlide(1);
+}, 5000);

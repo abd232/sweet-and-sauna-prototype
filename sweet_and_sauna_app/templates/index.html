@@ -1,6 +1,6 @@
 <!-- prettier-ignore-start -->
 {% extends "base.html" %}
-{% block title %}
+{% block title %} 
 Login 
 {%endblock%} 
 {% block extra_css %} 
@@ -10,6 +10,100 @@ Login
 {% block content %}
 <!-- prettier-ignore-end -->
 <main>
+  {% load static %}
+
+  <section class="hero-slider">
+    <div class="hero-slide active">
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <div class="hero-text">
+          <span class="hero-badge">SWEET SAUNA</span>
+          <h1>مرحباً بكم في متجرنا للملابس والمنتجات الرياضية</h1>
+          <p>
+            أفضل المنتجات المختارة بعناية لتساعدك على الراحة، الأناقة، والدعم
+            اليومي.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="{% url 'store' %}" class="hero-btn primary-btn"
+              >اذهب إلى المتجر</a
+            >
+            <a href="{% url 'about' %}" class="hero-btn secondary-btn"
+              >المزيد عنا</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-dots">
+        <span class="dot active" onclick="showSlide(0)"></span>
+        <span class="dot" onclick="showSlide(1)"></span>
+        <span class="dot" onclick="showSlide(2)"></span>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <div class="hero-text">
+          <span class="hero-badge">NEW ARRIVALS</span>
+          <h1>أناقة وعملية في كل تفاصيل منتجاتنا</h1>
+          <p>
+            اكتشف تشكيلتنا من المنتجات اليومية والرياضية المصممة لتناسب
+            احتياجاتك.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="{% url 'store' %}" class="hero-btn primary-btn"
+              >تسوق الآن</a
+            >
+            <a href="{% url 'about' %}" class="hero-btn secondary-btn"
+              >تعرف علينا</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-dots">
+        <span class="dot" onclick="showSlide(0)"></span>
+        <span class="dot active" onclick="showSlide(1)"></span>
+        <span class="dot" onclick="showSlide(2)"></span>
+      </div>
+    </div>
+
+    <div class="hero-slide">
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <div class="hero-text">
+          <span class="hero-badge">COMFORT & STYLE</span>
+          <h1>منتجات مختارة لتناسب يومك وحركتك</h1>
+          <p>جودة ممتازة، تصميم أنيق، وتجربة تسوق بسيطة وسريعة.</p>
+
+          <div class="hero-buttons">
+            <a href="{% url 'store' %}" class="hero-btn primary-btn"
+              >اذهب للمتجر</a
+            >
+            <a href="{% url 'about' %}" class="hero-btn secondary-btn"
+              >اقرأ المزيد</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-dots">
+        <span class="dot" onclick="showSlide(0)"></span>
+        <span class="dot" onclick="showSlide(1)"></span>
+        <span class="dot active" onclick="showSlide(2)"></span>
+      </div>
+    </div>
+
+    <button class="hero-nav prev" onclick="changeSlide(-1)">&#10095;</button>
+    <button class="hero-nav next" onclick="changeSlide(1)">&#10094;</button>
+  </section>
+
   {% for menu in special_menus %}
   <div class="cards-container">
     <div class="cards-container-header">

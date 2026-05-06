@@ -33,7 +33,15 @@ def log_in(request):
 
 def register(request):
     if request.method == 'POST':
-        pass
+        errors = Customer.objects.validate_registration(request.POST)
+        if errors:
+            context={
+                'errors' : errors,
+            }
+            return render(request , 'account/log_in.html' , context=context)
+        else:
+            Customer.objects.create_customer(request.POST)
+            return redirect('/accounts/login/')
     return render(request, 'account/log_in.html')
 
 def log_out(request):
