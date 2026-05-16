@@ -12,6 +12,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     {% block extra_css %} {% endblock %}
@@ -31,7 +37,7 @@
         <ul class="nav-menu">
           <li><a id="main_page" href="{% url 'index' %}">الرئيسية</a></li>
           <li><a id="store_page" href="{% url 'store' %}">المتجر</a></li>
-          <li><a id="accessories_page" href="{% url 'store' %}">العروض</a></li>
+          <li><a id="orders_page" href="{% url 'orders' %}">الطلبات</a></li>
           <li><a id="offers_page" href="{% url 'store' %}">أكثر عنا</a></li>
           <li><a id="corsets_page" href="{% url 'store' %}">تواصل معنا</a></li>
         </ul>
@@ -92,9 +98,19 @@
 
         <!-- Cart -->
         <div class="action-icons">
-          <button class="icon-btn" type="button" aria-label="Cart">
+          <button
+            type="button"
+            class="icon-btn"
+            data-bs-toggle="modal"
+            data-bs-target="#cartModal"
+          >
             <i class="fa-solid fa-cart-shopping"></i>
-            <span class="cart-badge">2</span>
+
+            {% if cart_count is not None %}
+            <span class="cart-badge">
+              {% if cart_count > 5 %} 5+ {% else %} {{ cart_count }} {% endif %}
+            </span>
+            {% endif %}
           </button>
         </div>
 
@@ -175,6 +191,69 @@
         {% endif %}
       </ul>
     </div>
+    <div
+      class="modal fade cart-modal"
+      id="cartModal"
+      tabindex="-1"
+      aria-labelledby="cartModalLabel"
+      aria-hidden="true"
+      dir="rtl"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content cart-modal-content">
+          <!-- Header -->
+          <div class="modal-header cart-modal-header">
+            <h5 class="modal-title" id="cartModalLabel">سلة التسوق</h5>
+
+            <button
+              type="button"
+              class="btn-close m-0"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- Body -->
+          <div class="modal-body cart-modal-body">
+            <div id="cartItemsContainer">
+              <!-- Cart items will be inserted here using JS -->
+            </div>
+
+            <div class="cart-total-box">
+              <div class="cart-total-icon">
+                <i class="fa-solid fa-wallet"></i>
+              </div>
+
+              <div class="cart-total-text">
+                الإجمالي:
+                <strong id="cartTotalPrice">0.00 درهم</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="modal-footer cart-modal-footer">
+            <button
+              type="button"
+              class="btn continue-shopping-btn"
+              data-bs-dismiss="modal"
+            >
+              متابعة التسوق
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <button
+              type="button"
+              class="btn confirm-order-btn"
+              id="confirmOrderBtn"
+            >
+              تأكيد الطلب
+              <i class="fa-solid fa-bag-shopping"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     {% block content %} {% endblock %}
     <footer class="main-footer">
       <div class="footer-container">
@@ -237,6 +316,11 @@
         <p>جميع الحقوق محفوظة &copy; 2026 Sweet Sauna. تم التطوير بكل حب.</p>
       </div>
     </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
     <script>
       const menuToggle = document.getElementById("menuToggle");
       const closeMenu = document.getElementById("closeMenu");
@@ -282,6 +366,334 @@
           }
         });
       }
+    </script>
+    <script>
+      const cartModal = document.getElementById("cartModal");
+      const cartItemsContainer = document.getElementById("cartItemsContainer");
+      const cartTotalPrice = document.getElementById("cartTotalPrice");
+
+      cartModal.addEventListener("show.bs.modal", function () {
+        loadCartItems();
+      });
+
+      function loadCartItems() {
+        cartItemsContainer.innerHTML = `
+    <div class="text-center py-4">
+      جاري تحميل السلة...
+    </div>
+  `;
+
+        fetch("/Get_cart_items/")
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.authenticated) {
+              cartItemsContainer.innerHTML = `
+          <div class="text-center py-4">
+            يرجى تسجيل الدخول لعرض سلة التسوق
+          </div>
+        `;
+
+              cartTotalPrice.textContent = "0.00 درهم";
+              return;
+            }
+
+            if (data.items.length === 0) {
+              cartItemsContainer.innerHTML = `
+          <div class="text-center py-4">
+            سلة التسوق فارغة
+          </div>
+        `;
+
+              cartTotalPrice.textContent = "0.00 درهم";
+              return;
+            }
+
+            cartItemsContainer.innerHTML = "";
+
+            data.items.forEach((item) => {
+              cartItemsContainer.innerHTML += `
+          <div class="cart-item" 
+            data-cart-item-id="${item.id}"
+            data-product-id="${item.product_id}">
+            <div class="cart-product-img">
+              <img
+                src="${item.image}"
+                alt="${item.name}"
+              />
+            </div>
+
+            <div class="cart-product-info">
+              <h6>${item.name}</h6>
+              <span class="cart-price">${item.price} درهم</span>
+
+              <div class="cart-qty">
+                <button type="button" class="qty-btn cart-minus">-</button>
+                <input
+                  type="number"
+                  class="cart-qty-input"
+                  value="${item.quantity}"
+                  min="1"
+                />
+                <button type="button" class="qty-btn cart-plus">+</button>
+              </div>
+            </div>
+
+            <button type="button" class="remove-item-btn">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        `;
+            });
+
+            cartTotalPrice.textContent = `${data.total} درهم`;
+          })
+          .catch((error) => {
+            console.error("Error loading cart:", error);
+
+            cartItemsContainer.innerHTML = `
+        <div class="text-center py-4 text-danger">
+          حدث خطأ أثناء تحميل السلة
+        </div>
+      `;
+          });
+      }
+    </script>
+    <script>
+      document.addEventListener("click", function (e) {
+        const addBtn = e.target.closest(".add-to-cart-btn");
+
+        if (!addBtn) return;
+
+        const card = addBtn.closest(".product-card");
+        const productId = addBtn.dataset.productId;
+        const quantityInput = card.querySelector(".qty-input");
+        const quantity = quantityInput ? quantityInput.value : 1;
+
+        const csrfToken = getCookie("csrftoken");
+
+        fetch("/Add_to_cart/", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body: new URLSearchParams({
+            product_id: productId,
+            quantity: quantity,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.success) {
+              alert(data.message);
+              return;
+            }
+
+            // Update cart badge in the header immediately
+            const cartBadge = document.querySelector(".cart-badge");
+
+            if (cartBadge) {
+              cartBadge.textContent = data.cart_count_display;
+            }
+          })
+          .catch((error) => {
+            console.error("Add to cart error:", error);
+          });
+      });
+
+      function getCookie(name) {
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1),
+              );
+              break;
+            }
+          }
+        }
+
+        return cookieValue;
+      }
+
+      document.addEventListener("click", function (e) {
+        const plusBtn = e.target.closest(".cart-plus");
+        const minusBtn = e.target.closest(".cart-minus");
+
+        if (!plusBtn && !minusBtn) return;
+
+        const cartItem = e.target.closest(".cart-item");
+        const productId = cartItem.dataset.productId;
+        const qtyInput = cartItem.querySelector(".cart-qty-input");
+
+        let quantity = parseInt(qtyInput.value) || 1;
+
+        if (plusBtn) {
+          quantity += 1;
+        }
+
+        if (minusBtn && quantity >= 1) {
+          quantity -= 1;
+        }
+
+        qtyInput.value = quantity;
+
+        if (quantity < 1) {
+          removeCartItem(productId, cartItem);
+        } else {
+          updateCartQuantity(productId, quantity);
+        }
+      });
+      function updateCartQuantity(productId, quantity) {
+        fetch("/update_cart/", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body: new URLSearchParams({
+            product_id: productId,
+            quantity: quantity,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.success) {
+              console.error(data.error);
+              return;
+            }
+
+            const cartTotalPrice = document.getElementById("cartTotalPrice");
+            cartTotalPrice.textContent = `${data.cart_total} درهم`;
+
+            const cartBadge = document.querySelector(".cart-badge");
+            if (cartBadge) {
+              cartBadge.textContent = data.cart_count_display;
+            }
+          })
+          .catch((error) => {
+            console.error("Update cart error:", error);
+          });
+      }
+      document.addEventListener("click", function (e) {
+        const removeBtn = e.target.closest(".remove-item-btn");
+
+        if (!removeBtn) return;
+
+        const cartItem = removeBtn.closest(".cart-item");
+        const productId = cartItem.dataset.productId;
+
+        removeCartItem(productId, cartItem);
+      });
+      function removeCartItem(productId, cartItemElement) {
+        fetch("/remove_from_cart/", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body: new URLSearchParams({
+            product_id: productId,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.success) {
+              console.error(data.error);
+              return;
+            }
+
+            cartItemElement.remove();
+
+            const cartTotalPrice = document.getElementById("cartTotalPrice");
+            cartTotalPrice.textContent = `${data.cart_total} درهم`;
+
+            const cartBadge = document.querySelector(".cart-badge");
+            if (cartBadge) {
+              cartBadge.textContent = data.cart_count_display;
+            }
+
+            const cartItemsContainer =
+              document.getElementById("cartItemsContainer");
+
+            if (data.cart_count === 0) {
+              cartItemsContainer.innerHTML = `
+          <div class="text-center py-4">
+            سلة التسوق فارغة
+          </div>
+        `;
+            }
+          })
+          .catch((error) => {
+            console.error("Remove cart item error:", error);
+          });
+      }
+      const confirmOrderBtn = document.getElementById("confirmOrderBtn");
+
+      confirmOrderBtn.addEventListener("click", function () {
+        confirmOrderBtn.disabled = true;
+        confirmOrderBtn.innerHTML = "جاري تأكيد الطلب...";
+
+        fetch("/confirm_order/", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data.success) {
+              alert(data.error);
+              confirmOrderBtn.disabled = false;
+              confirmOrderBtn.innerHTML = `
+          تأكيد الطلب
+          <i class="fa-solid fa-bag-shopping"></i>
+        `;
+              return;
+            }
+
+            const cartItemsContainer =
+              document.getElementById("cartItemsContainer");
+            const cartTotalPrice = document.getElementById("cartTotalPrice");
+            const cartBadge = document.querySelector(".cart-badge");
+
+            cartItemsContainer.innerHTML = `
+        <div class="text-center py-4">
+          تم تأكيد طلبك بنجاح
+        </div>
+      `;
+
+            cartTotalPrice.textContent = "0.00 درهم";
+
+            if (cartBadge) {
+              cartBadge.textContent = "0";
+            }
+
+            alert(data.message);
+
+            confirmOrderBtn.disabled = false;
+            confirmOrderBtn.innerHTML = `
+        تأكيد الطلب
+        <i class="fa-solid fa-bag-shopping"></i>
+      `;
+          })
+          .catch((error) => {
+            console.error("Confirm order error:", error);
+
+            confirmOrderBtn.disabled = false;
+            confirmOrderBtn.innerHTML = `
+        تأكيد الطلب
+        <i class="fa-solid fa-bag-shopping"></i>
+      `;
+          });
+      });
     </script>
   </body>
 </html>
