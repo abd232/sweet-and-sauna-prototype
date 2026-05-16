@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+طلباتي
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/orders.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<main class="orders-page" dir="rtl">
+  <section class="orders-container">
+
+    <div class="orders-header">
+      <h1>قائمة الطلبات</h1>
+      <p>تتبع حالة طلباتك</p>
+    </div>
+
+    <div class="orders-filters">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input
+          type="text"
+          id="orderSearch"
+          placeholder="ابحث في طلباتك"
+        />
+      </div>
+
+      <select id="orderSort">
+        <option value="date">فرز حسب: التاريخ</option>
+        <option value="newest">الأحدث أولاً</option>
+        <option value="oldest">الأقدم أولاً</option>
+        <option value="total">الإجمالي</option>
+      </select>
+    </div>
+
+    <div class="orders-list">
+
+      {% for order in orders %}
+      <article class="order-card">
+
+        <div class="order-top">
+          <h3>طلب #{{ order.id }}</h3>
+          <span>التاريخ: {{ order.created_at|date:"d F Y" }}</span>
+        </div>
+
+        <div class="order-body">
+
+          <div class="order-items">
+            {% for item in order.items.all %}
+            <div class="order-item">
+              <img
+                src="{{ item.product.image.url }}"
+                alt="{{ item.product.arabic_name }}"
+              />
+
+              <div class="item-info">
+                <h4>{{ item.product.arabic_name }}</h4>
+                <p>الكمية: {{ item.quantity }}</p>
+                <p>السعر: {{ item.price }} درهم</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="order-summary">
+            <p class="order-total">
+              الإجمالي: <strong>{{ order.total }} درهم</strong>
+            </p>
+
+            {% if order.status == "delivered" %}
+              <span class="status-badge delivered">
+                <i class="fa-solid fa-check"></i>
+                تم التوصيل
+              </span>
+
+              <div class="progress-track">
+                <div class="progress-fill delivered-fill"></div>
+              </div>
+
+            {% elif order.status == "shipping" %}
+              <span class="status-badge shipping">
+                قيد الشحن
+              </span>
+
+              <div class="progress-track">
+                <div class="progress-fill shipping-fill"></div>
+              </div>
+
+            {% elif order.status == "pending" %}
+              <span class="status-badge pending">
+                قيد التجهيز
+              </span>
+
+              <div class="progress-track">
+                <div class="progress-fill pending-fill"></div>
+              </div>
+
+            {% else %}
+              <span class="status-badge cancelled">
+                ملغي
+              </span>
+
+              <div class="progress-track">
+                <div class="progress-fill cancelled-fill"></div>
+              </div>
+            {% endif %}
+
+            <a href="{% url 'order_details' order.id %}" class="details-btn">
+              تفاصيل الطلب
+            </a>
+          </div>
+
+        </div>
+      </article>
+      {% empty %}
+      <div class="empty-orders">
+        لا توجد طلبات حالياً
+      </div>
+      {% endfor %}
+
+    </div>
+
+    {% if orders.has_other_pages %}
+    <div class="orders-pagination">
+      {% if orders.has_previous %}
+      <a href="?page={{ orders.previous_page_number }}" class="page-arrow">
+        <i class="fa-solid fa-chevron-right"></i>
+      </a>
+      {% endif %}
+
+      <span>
+        الصفحة {{ orders.number }} من {{ orders.paginator.num_pages }}
+      </span>
+
+      {% if orders.has_next %}
+      <a href="?page={{ orders.next_page_number }}" class="page-arrow">
+        <i class="fa-solid fa-chevron-left"></i>
+      </a>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </section>
+</main>
+
+{% endblock %}

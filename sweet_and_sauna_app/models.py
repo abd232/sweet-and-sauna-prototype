@@ -38,6 +38,30 @@ class CustomerManger(models.Manager):
         if post_data['address'] and len(post_data['address']) < 10:
             errors['address'] = 'Address must be at least 10 characters long'
         return errors
+    
+class CartManger(models.Manager):
+    def create_cart_item(self, user, product, price, quantity):
+        cart_item = CartItem.objects.filter(user=user, product=product).first()
+        if not cart_item:
+            CartItem.objects.create(user=user, product=product, price=price, quantity=quantity)
+        else:
+            cart_item.quantity += quantity
+            cart_item.save()
+        return True
+    def update_cart_item(self, user, product, price, quantity): 
+        cart_item = CartItem.objects.filter(user=user, product=product).first()
+        if cart_item:
+            cart_item.price = price
+            cart_item.quantity = quantity
+            cart_item.save()
+            return True
+        return False
+    def remove_cart_item(self, user, product):
+        cart_item = CartItem.objects.filter(user=user, product=product).first()
+        if cart_item:
+            cart_item.delete()
+            return True
+        return False
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -148,19 +172,30 @@ class Product_tag(models.Model):
         return f"{self.product.name} - {self.category.name}"
 
 class Order(models.Model):
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('processing', 'Processing'),
-        ('shipped', 'Shipped'),
-        ('delivered', 'Delivered'),
-        ('cancelled', 'Cancelled'),
-    ]
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders')
+    STATUS_CHOICES = (
+        ("pending", "قيد التجهيز"),
+        ("shipping", "قيد الشحن"),
+        ("delivered", "تم التوصيل"),
+        ("cancelled", "ملغي"),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    state = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Order {self.id} - {self.customer.user.username}"
+    objects = CartManger()

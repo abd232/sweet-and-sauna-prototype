@@ -4,7 +4,7 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
+    atomic = False
     dependencies = [
         ('sweet_and_sauna_app', '0006_product_tag_tags'),
     ]
